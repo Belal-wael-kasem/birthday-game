@@ -7,7 +7,7 @@ const box = 30;
 const speed = 200;
 const WIN_SCORE = 19;
 
-// ================= IMAGES =================
+// Images
 const players = [];
 for (let i = 1; i <= 4; i++) {
   const img = new Image();
@@ -18,7 +18,7 @@ for (let i = 1; i <= 4; i++) {
 const foodImg = new Image();
 foodImg.src = "food.png";
 
-// ================= GAME VARIABLES =================
+// Game variables
 let x, y;
 let dx = 0, dy = 0;
 let size;
@@ -26,15 +26,22 @@ let food;
 let score = 0;
 let game = null;
 
-// ================= CONTROLS =================
+// 🎮 MOVE FUNCTION (KEYBOARD + MOBILE)
+window.move = function (dir) {
+  if (dir === "UP")    { dx = 0; dy = -box; }
+  if (dir === "DOWN")  { dx = 0; dy = box; }
+  if (dir === "LEFT")  { dx = -box; dy = 0; }
+  if (dir === "RIGHT") { dx = box; dy = 0; }
+};
+
+// Keyboard controls (PC)
 document.addEventListener("keydown", e => {
-  if (e.key === "ArrowUp")    { dx = 0; dy = -box; }
-  if (e.key === "ArrowDown")  { dx = 0; dy = box; }
-  if (e.key === "ArrowLeft")  { dx = -box; dy = 0; }
-  if (e.key === "ArrowRight") { dx = box; dy = 0; }
+  if (e.key === "ArrowUp") move("UP");
+  if (e.key === "ArrowDown") move("DOWN");
+  if (e.key === "ArrowLeft") move("LEFT");
+  if (e.key === "ArrowRight") move("RIGHT");
 });
 
-// ================= HELPERS =================
 function randomFood() {
   return {
     x: Math.floor(Math.random() * (canvas.width / box)) * box,
@@ -42,15 +49,15 @@ function randomFood() {
   };
 }
 
-// 🎯 IMAGE RULES (exact)
+// 🎯 IMAGE RULES (as you wanted)
 function playerImage() {
-  if (score === 19) return players[3];  // Pic 4
-  if (score >= 13) return players[2];   // Pic 3
-  if (score >= 7)  return players[1];   // Pic 2
-  return players[0];                    // Pic 1
+  if (score === 19) return players[3];  // pic 4
+  if (score >= 13) return players[2];   // pic 3
+  if (score >= 7)  return players[1];   // pic 2
+  return players[0];                    // pic 1
 }
 
-// ================= GAME LOOP =================
+// GAME LOOP
 function loop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -96,38 +103,32 @@ function loop() {
     food = randomFood();
     scoreEl.textContent = "Score: " + score;
 
-    // 🎉 FINAL SCREEN
     if (score === WIN_SCORE) {
       clearInterval(game);
-
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw PLAYER 4 (big & centered)
       const finalSize = 150;
       ctx.drawImage(
         players[3],
         canvas.width / 2 - finalSize / 2,
-        canvas.height / 2 - finalSize / 2 - 40,
+        canvas.height / 2 - finalSize / 2 - 30,
         finalSize,
         finalSize
       );
 
-      // Draw text UNDER the image
       ctx.fillStyle = "#fff";
       ctx.font = "32px Arial";
       ctx.textAlign = "center";
       ctx.fillText(
-        "🎉 HAPPY BIRTHDAY DODA ❤️❤️  ",
+        " HAPPY BIRTHDAY DODA❤️❤️",
         canvas.width / 2,
         canvas.height / 2 + finalSize / 2 + 20
       );
-
-      return;
     }
   }
 }
 
-// ================= START =================
+// START
 startBtn.addEventListener("click", () => {
   clearInterval(game);
 
